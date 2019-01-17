@@ -4,7 +4,7 @@ This app define workflow for business and execute the defined workflow as a sing
 
   - To define workflow this app use json file
   - This json file contains list of component
-  - App execute the the component in sequence as defined in json file
+  - App execute the component in sequence as defined in json file
   - One component output can be passed to another component  as input (A-->B) and make sure that if B is expecting some input then A should return some output else it will break the execution of workflow. Hence the workflow should be properly defined in json file.
 
 Sample  json 
