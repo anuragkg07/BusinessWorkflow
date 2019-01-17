@@ -66,3 +66,6 @@ Sample  json
 ```sh
     wfc.getResult();
 ```
+
+### High-level design
+![High-level design](/hld.PNG)
