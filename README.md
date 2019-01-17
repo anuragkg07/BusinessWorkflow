@@ -1,4 +1,4 @@
-# Business Process
+# Business Workflow
 
 This app define workflow for business and execute the defined workflow as a single process.
 
