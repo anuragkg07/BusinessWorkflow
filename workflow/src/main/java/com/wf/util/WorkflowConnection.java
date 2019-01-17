@@ -4,9 +4,13 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.TreeMap;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -14,9 +18,28 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 public class WorkflowConnection {
 	private List<Class> classToScan = new ArrayList<Class>();
 	private Map<String, CMDetails> aliasConfigMap = new HashMap<String, CMDetails>();
-	private Map<String, Object> wfResult = new HashMap<String, Object>();
+
 	private Object previousResult = null;
-	private String filepath=null;
+	private String filepath = null;
+
+	private Comparator<String> keyComparator = new Comparator<String>() {
+
+		public int compare(String e1, String e2) {
+			int v1 = getKeyIndex(e1);
+			int v2 = getKeyIndex(e2);
+
+			return v1 - v2;
+		}
+
+		public int getKeyIndex(String key) {
+			String[] arr = key.split("_");
+			int length = arr.length;
+			return Integer.parseInt(arr[length - 1]);
+		}
+
+	};
+	private Map<String, Object> wfResult = new TreeMap<String, Object>(keyComparator);
+
 	public void addClassToScan(Class classz) {
 		classToScan.add(classz);
 	}
@@ -41,8 +64,8 @@ public class WorkflowConnection {
 
 	}
 
-	public void run() throws JsonParseException, JsonMappingException, IOException,
-			IllegalAccessException, IllegalArgumentException, InvocationTargetException, InstantiationException {
+	public void run() throws JsonParseException, JsonMappingException, IOException, IllegalAccessException,
+			IllegalArgumentException, InvocationTargetException, InstantiationException {
 		Workflow workflow = Converter.getWorkflow(this.filepath);
 		List<Connection> connections = workflow.getConnections();
 		this.exploreConnections(connections);
@@ -50,7 +73,7 @@ public class WorkflowConnection {
 
 	private void exploreConnections(List<Connection> connections)
 			throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, InstantiationException {
-		
+
 		Connection lastConnection = null;
 		int sequenceNo = 0;
 		for (Connection connection : connections) {
@@ -70,12 +93,12 @@ public class WorkflowConnection {
 
 	private void execute(CMDetails cmDetails, int sequenceNo)
 			throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, InstantiationException {
-		System.out.println(sequenceNo+"_Executing method  " + cmDetails.getMethod().getName() + "  from class  "
+		System.out.println(sequenceNo + "_Executing method  " + cmDetails.getMethod().getName() + "  from class  "
 				+ cmDetails.getClazz().getName());
 		Class<?> retType = cmDetails.getMethod().getReturnType();
 		Object out = null;
 		if (cmDetails.getMethod().getParameterCount() == 0) {
-			
+
 			// System.out.println(retType.getName());
 			if (retType.getName().equalsIgnoreCase("void")) {
 				out = cmDetails.getMethod().invoke(cmDetails.getClazz().newInstance());
@@ -88,13 +111,12 @@ public class WorkflowConnection {
 			previousResult = out;
 
 		} else {
-			out =cmDetails.getMethod().invoke(cmDetails.getClazz().newInstance(), previousResult);
+			out = cmDetails.getMethod().invoke(cmDetails.getClazz().newInstance(), previousResult);
 			wfResult.put(cmDetails.getMethod().getAnnotation(ComponentName.class).value() + "_" + sequenceNo, out);
-			
+
 		}
 
 	}
-
 
 	public void setFilepath(String filepath) {
 		this.filepath = filepath;
@@ -103,4 +125,5 @@ public class WorkflowConnection {
 	public Map<String, Object> getResult() {
 		return this.wfResult;
 	}
+
 }
