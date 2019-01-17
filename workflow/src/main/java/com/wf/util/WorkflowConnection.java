@@ -108,13 +108,13 @@ public class WorkflowConnection {
 				out = cmDetails.getMethod().invoke(cmDetails.getClazz().newInstance());
 				wfResult.put(cmDetails.getMethod().getAnnotation(ComponentName.class).value() + "_" + sequenceNo, out);
 			}
-			previousResult = out;
 
 		} else {
 			out = cmDetails.getMethod().invoke(cmDetails.getClazz().newInstance(), previousResult);
 			wfResult.put(cmDetails.getMethod().getAnnotation(ComponentName.class).value() + "_" + sequenceNo, out);
 
 		}
+		previousResult = out;
 
 	}
 
