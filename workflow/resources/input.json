@@ -1,0 +1,18 @@
+{
+	"name": "Myworkflow",
+	"type": "Lookup",
+	"connections": [
+		{
+			"fromOperation": "Component_A",
+			"toOperation": "Component_B"
+		},
+		{
+			"fromOperation": "Component_B",
+			"toOperation": "Component_C"
+		},
+		{
+			"fromOperation": "Component_C",
+			"toOperation": "Component_D"
+		}
+	]
+}
