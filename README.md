@@ -1,4 +1,4 @@
-# Business Workflow
+# Simple Business Workflow Engine
 
 This app define workflow for business and execute the defined workflow as a single process.
 
@@ -6,6 +6,7 @@ This app define workflow for business and execute the defined workflow as a sing
   - This json file contains list of component
   - App execute the component in sequence as defined in json file
   - One component output can be passed to another component  as input (A-->B) and make sure that if B is expecting some input then A should return some output else it will break the execution of workflow. Hence the workflow should be properly defined in json file.
+  - This  supports only linear workflow such as A-->B-->C-->D-->B-->E and doesnt offer support for workflow with if and branch relations
 
 Sample  json 
 
