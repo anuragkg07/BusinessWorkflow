@@ -45,8 +45,8 @@ Sample  json
 ```
 ### Registering 
 
-  - You can register the component by registring the class in which component method is define
-  - You also need to register the workflow json file to application
+  - Register the component by registring the class in which component method is define
+  - Register the workflow json file to application
 ```sh
         String filePath="workflow.json"
         WorkflowConnection wfc=new WorkflowConnection();
